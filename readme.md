@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install --save issue-regex
+$ npm install issue-regex
 ```
 
 

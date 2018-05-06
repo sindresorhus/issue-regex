@@ -21,7 +21,7 @@ const nonMatches = [
 	'non/-repo#123'
 ];
 
-test(t => {
+test('main', t => {
 	t.deepEqual(
 		'Fixes #143 and avajs/ava#1023'.match(m()),
 		['#143', 'avajs/ava#1023']
@@ -34,10 +34,11 @@ test(t => {
 	for (const x of nonMatches) {
 		t.is(m().exec(`foo ${x} bar`), null);
 	}
+});
 
+test('main #2', t => {
 	// https://regex101.com/r/SQrOlx/12
-	t.deepEqual(
-		`#123
+	const actual = `#123
 
 Should match:
 
@@ -56,16 +57,19 @@ Should NOT match:
 - this/is/not/repo#123
 - #123hashtag
 
-#123`.match(m()),
-		[
-			'#123',
-			'#666',
-			'another/repo#123',
-			'ano-ther.999/re_po#123',
-			'#123',
-			'#123',
-			'another/repo#123',
-			'not/repo#123', // Current limitation; this match should not be here
-			'#123']
-	);
+#123`;
+
+	const expected = [
+		'#123',
+		'#666',
+		'another/repo#123',
+		'ano-ther.999/re_po#123',
+		'#123',
+		'#123',
+		'another/repo#123',
+		'not/repo#123', // Current limitation; this match should not be here
+		'#123'
+	];
+
+	t.deepEqual(actual.match(m()), expected);
 });
