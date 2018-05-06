@@ -1,6 +1,6 @@
 {
 	"name": "issue-regex",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "Regular expression for matching issue references",
 	"license": "MIT",
 	"repository": "sindresorhus/issue-regex",
