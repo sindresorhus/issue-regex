@@ -67,7 +67,6 @@ Should NOT match:
 		'#123',
 		'#123',
 		'another/repo#123',
-		'not/repo#123', // Current limitation; this match should not be here
 		'#123'
 	];
 
