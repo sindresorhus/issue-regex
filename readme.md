@@ -19,8 +19,6 @@ const issueRegex = require('issue-regex');
 //=> ['#143', 'avajs/ava#1023']
 ```
 
-It matches issue references as best as JS regular expressions can, see the [playground at Regex101](https://regex101.com/r/SQrOlx/12).
-
 
 ## API
 

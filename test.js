@@ -1,5 +1,5 @@
 import test from 'ava';
-import m from '.';
+import issueRegex from '.';
 
 const matches = [
 	'#1',
@@ -24,16 +24,16 @@ const nonMatches = [
 
 test('main', t => {
 	t.deepEqual(
-		'Fixes #143 and avajs/ava#1023'.match(m()),
+		'Fixes #143 and avajs/ava#1023'.match(issueRegex()),
 		['#143', 'avajs/ava#1023']
 	);
 
 	for (const x of matches) {
-		t.is((m().exec(`foo ${x} bar`) || [])[0], x);
+		t.is((issueRegex().exec(`foo ${x} bar`) || [])[0], x);
 	}
 
 	for (const x of nonMatches) {
-		t.is(m().exec(`foo ${x} bar`), null);
+		t.is(issueRegex().exec(`foo ${x} bar`), null);
 	}
 });
 
@@ -42,14 +42,14 @@ test('main #2', t => {
 	const actual = `#123
 
 	Should match:
-	
+
 	- Plain issue: #666
 	- From another repository: another/repo#123
 	- Crazy formatting: ano-ther.999/re_po#123
 	- In brackets: (#123), [#123], <another/repo#123>
-	
+
 	Should NOT match:
-	
+
 	- #0
 	- another/repo#0
 	- nonrepo#123
@@ -57,7 +57,7 @@ test('main #2', t => {
 	- user_repo#123
 	- this/is/not/repo#123
 	- #123hashtag
-	
+
 	#123`;
 
 	const expected = [
@@ -71,5 +71,5 @@ test('main #2', t => {
 		'#123'
 	];
 
-	t.deepEqual(actual.match(m()), expected);
+	t.deepEqual(actual.match(issueRegex()), expected);
 });

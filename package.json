@@ -36,7 +36,7 @@
 		"link"
 	],
 	"devDependencies": {
-		"ava": "*",
-		"xo": "*"
+		"ava": "^1.2.0",
+		"xo": "^0.24.0"
 	}
 }
