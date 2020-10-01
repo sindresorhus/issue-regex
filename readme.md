@@ -2,7 +2,7 @@
 
 > Regular expression for matching issue references
 
-
+improving the docs
 ## Install
 
 ```
