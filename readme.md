@@ -1,4 +1,4 @@
-# issue-regex [![Build Status](https://travis-ci.org/sindresorhus/issue-regex.svg?branch=master)](https://travis-ci.org/sindresorhus/issue-regex)
+# issue-regex
 
 > Regular expression for matching issue references
 
