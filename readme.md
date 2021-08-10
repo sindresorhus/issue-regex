@@ -2,23 +2,20 @@
 
 > Regular expression for matching issue references
 
-
 ## Install
 
 ```
 $ npm install issue-regex
 ```
 
-
 ## Usage
 
 ```js
-const issueRegex = require('issue-regex');
+import issueRegex from 'issue-regex';
 
 'Fixes #143 and avajs/ava#1023'.match(issueRegex());
 //=> ['#143', 'avajs/ava#1023']
 ```
-
 
 ## API
 
@@ -26,12 +23,6 @@ const issueRegex = require('issue-regex');
 
 Returns a `RegExp` for matching issue references.
 
-
 ## Related
 
 - [linkify-issues](https://github.com/sindresorhus/linkify-issues) - Linkify GitHub issue references
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)

@@ -1,11 +1,11 @@
 import test from 'ava';
-import issueRegex from '.';
+import issueRegex from './index.js';
 
 const matches = [
 	'#1',
 	'#3223',
 	'sindresorhus/dofle#33',
-	'foo-bar/unicorn.rainbow#21'
+	'foo-bar/unicorn.rainbow#21',
 ];
 
 const nonMatches = [
@@ -19,13 +19,13 @@ const nonMatches = [
 	'dofle#33',
 	'#123hashtag',
 	'non/-repo#123',
-	'this/is/not/repo#123'
+	'this/is/not/repo#123',
 ];
 
 test('main', t => {
 	t.deepEqual(
 		'Fixes #143 and avajs/ava#1023'.match(issueRegex()),
-		['#143', 'avajs/ava#1023']
+		['#143', 'avajs/ava#1023'],
 	);
 
 	for (const x of matches) {
@@ -68,7 +68,7 @@ test('main #2', t => {
 		'#123',
 		'#123',
 		'another/repo#123',
-		'#123'
+		'#123',
 	];
 
 	t.deepEqual(actual.match(issueRegex()), expected);
