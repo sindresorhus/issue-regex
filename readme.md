@@ -18,7 +18,8 @@ import issueRegex from 'issue-regex';
 ```
 
 Organisation name, repository name, and issue number are also available
-individually in capturing groups 1-3, or named groups `org`, `repo`, and `num`:
+individually in capturing groups 1-3, or named groups `organization`,
+`repository`, and `issueNumber`:
 
 ```js
 issueRegex().exec('Fixes avajs/ava#1023'));
@@ -29,7 +30,7 @@ issueRegex().exec('Fixes avajs/ava#1023'));
   '1023',
   index: 6,
   input: 'Fixes avajs/ava#1023',
-  groups: [Object: null prototype] { org: 'avajs', repo: 'ava', num: '1023' }
+  groups: [Object: null prototype] { organization: 'avajs', repository: 'ava', issueNumber: '1023' }
 ]
 ```
 
