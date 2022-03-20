@@ -25,8 +25,25 @@ const nonMatches = [
 	'#123hashtag',
 	'non/-repo#123',
 	'this/is/not/repo#123',
+
+	// GitHub organization names can't be longer than 39 characters
+	// as of March 2022.
+	// Source: GitHub shows an error message when trying to create
+	// an organization with a longer name. See issue #11.
 	'thisorganisationnameistoolongxxxxxxxxxxx/foo#123',
+
+	// GitHub repository names can't be longer than 100 characters
+	// as of March 2022.
+	// Source: The text box on the repository creation page has a
+	// maxLength of 100. See issue #11.
 	'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
+
+	// A GitHub issue number shouldn't have an infinite number of digits. It's
+	// difficult to choose a cut-off point here because GitHub hasn't published
+	// any information on limits on the number of issues per repository. Here we
+	// choose a (completely arbitrary) limit of 10^100. This can probably be set
+	// much lower, but how much lower? The closer we get to a realistic number,
+	// the higher the likelihood of a false negative.
 	'foo/thisissuenumberistoolong#11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
 ];
 
