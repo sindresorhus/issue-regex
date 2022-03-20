@@ -87,4 +87,8 @@ test('capturing groups', t => {
 	t.is(match[1], 'foo');
 	t.is(match[2], 'bar');
 	t.is(match[3], '123');
+
+	t.is(match.groups.org, 'foo');
+	t.is(match.groups.repo, 'bar');
+	t.is(match.groups.num, '123');
 });
