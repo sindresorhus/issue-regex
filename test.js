@@ -6,6 +6,11 @@ const matches = [
 	'#3223',
 	'sindresorhus/dofle#33',
 	'foo-bar/unicorn.rainbow#21',
+	'foo/a#1',
+	'a/foo#1',
+	'thisorganisationnameislongbutokxxxxxxxx/foo#123',
+	'foo/thisrepositorynameislongbutokxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
+	'foo/longbutokissuenumber#1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
 ];
 
 const nonMatches = [
@@ -20,6 +25,9 @@ const nonMatches = [
 	'#123hashtag',
 	'non/-repo#123',
 	'this/is/not/repo#123',
+	'thisorganisationnameistoolongxxxxxxxxxxx/foo#123',
+	'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
+	'foo/thisissuenumberistoolong#11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
 ];
 
 test('main', t => {
@@ -72,4 +80,11 @@ test('main #2', t => {
 	];
 
 	t.deepEqual(actual.match(issueRegex()), expected);
+});
+
+test('capturing groups', t => {
+	const match = issueRegex().exec('foo/bar#123');
+	t.is(match[1], 'foo');
+	t.is(match[2], 'bar');
+	t.is(match[3], '123');
 });

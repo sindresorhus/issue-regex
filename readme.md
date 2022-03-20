@@ -17,6 +17,22 @@ import issueRegex from 'issue-regex';
 //=> ['#143', 'avajs/ava#1023']
 ```
 
+Organisation name, repository name, and issue number are also available
+individually in capturing groups 1-3:
+
+```js
+issueRegex().exec('Fixes avajs/ava#1023'));
+[
+  'avajs/ava#1023',
+  'avajs',
+  'ava',
+  '1023',
+  index: 6,
+  input: 'Fixes avajs/ava#1023',
+  groups: undefined
+]
+```
+
 ## API
 
 ### issueRegex()
