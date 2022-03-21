@@ -10,7 +10,20 @@ const matches = [
 	'a/foo#1',
 	'thisorganisationnameislongbutokxxxxxxxx/foo#123',
 	'foo/thisrepositorynameislongbutokxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
+	'#1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
 	'foo/longbutokissuenumber#1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+	'foo/-#123',
+	'foo/-bar#123',
+	'foo/bar-#123',
+	'foo/foo-bar#123',
+	'foo/.bar#123',
+	'foo/..bar#123',
+	'foo/...#123',
+	'foo/_#123',
+	'foo/0#123',
+	'0/bar#123',
+	'1/1#1',
+	'Foo/Bar#1',
 ];
 
 const nonMatches = [
@@ -23,8 +36,6 @@ const nonMatches = [
 	'sindresorhus/dofle#0',
 	'dofle#33',
 	'#123hashtag',
-	'non/-repo#123',
-	'this/is/not/repo#123',
 
 	// GitHub organization names can't be longer than 39 characters
 	// as of March 2022.
@@ -44,14 +55,22 @@ const nonMatches = [
 	// choose a (completely arbitrary) limit of 10^100. This can probably be set
 	// much lower, but how much lower? The closer we get to a realistic number,
 	// the higher the likelihood of a false negative.
+	'#11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
 	'foo/thisissuenumberistoolong#11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+
+	'foo_bar/bar',
+	'-foo/bar',
+	'foo-/bar',
+	'foo.bar/bar',
+	'foo/.',
+	'foo/..',
 ];
 
 test('main', t => {
-	t.deepEqual(
-		'Fixes #143 and avajs/ava#1023'.match(issueRegex()),
-		['#143', 'avajs/ava#1023'],
-	);
+	t.deepEqual('Fixes #143 and avajs/ava#1023'.match(issueRegex()), [
+		'#143',
+		'avajs/ava#1023',
+	]);
 
 	for (const x of matches) {
 		t.is((issueRegex().exec(`foo ${x} bar`) || [])[0], x);
@@ -72,16 +91,25 @@ test('main #2', t => {
 	- From another repository: another/repo#123
 	- Crazy formatting: ano-ther.999/re_po#123
 	- In brackets: (#123), [#123], <another/repo#123>
+	- this/is/ok/repo#444
+	- this/is.ok/repo#444
+	- -ok/repo#444
+	- foo/-bar#123
+	- foo/-#123
+	- foo/.bar#123
+	- foo/...#123
+	- foo_bar/bar#123
 
 	Should NOT match:
 
 	- #0
 	- another/repo#0
 	- nonrepo#123
-	- non/-repo#123
 	- user_repo#123
-	- this/is/not/repo#123
 	- #123hashtag
+	- foo/.#111
+	- foo/..#222
+  - _foo/bar#123
 
 	#123`;
 
@@ -89,10 +117,17 @@ test('main #2', t => {
 		'#123',
 		'#666',
 		'another/repo#123',
-		'ano-ther.999/re_po#123',
+		'999/re_po#123',
 		'#123',
 		'#123',
 		'another/repo#123',
+		'ok/repo#444',
+		'ok/repo#444',
+		'ok/repo#444',
+		'foo/-bar#123',
+		'foo/-#123',
+		'foo/.bar#123',
+		'foo/...#123',
 		'#123',
 	];
 
