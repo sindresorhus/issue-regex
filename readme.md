@@ -4,8 +4,8 @@
 
 ## Install
 
-```
-$ npm install issue-regex
+```sh
+npm install issue-regex
 ```
 
 ## Usage
@@ -15,6 +15,27 @@ import issueRegex from 'issue-regex';
 
 'Fixes #143 and avajs/ava#1023'.match(issueRegex());
 //=> ['#143', 'avajs/ava#1023']
+```
+
+Organization name, repository name, and issue number are also available individually in capturing groups 1-3, or named groups `organization`, `repository`, and `issueNumber`:
+
+```js
+issueRegex().exec('Fixes avajs/ava#1023');
+/*
+[
+	'avajs/ava#1023',
+	'avajs',
+	'ava',
+	'1023',
+	index: 6,
+	input: 'Fixes avajs/ava#1023',
+	groups: {
+		organization: 'avajs',
+		repository: 'ava',
+		issueNumber: '1023'
+	}
+]
+*/
 ```
 
 ## API
