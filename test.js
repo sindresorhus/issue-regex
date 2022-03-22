@@ -10,8 +10,8 @@ const matches = [
 	'a/foo#1',
 	'thisorganisationnameislongbutokxxxxxxxx/foo#123',
 	'foo/thisrepositorynameislongbutokxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
-	'#1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
-	'foo/longbutokissuenumber#1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+	'#1111111111',
+	'foo/longbutokissuenumber#1111111111',
 	'foo/-#123',
 	'foo/-bar#123',
 	'foo/bar-#123',
@@ -55,8 +55,8 @@ const nonMatches = [
 	// choose a (completely arbitrary) limit of 10^100. This can probably be set
 	// much lower, but how much lower? The closer we get to a realistic number,
 	// the higher the likelihood of a false negative.
-	'#11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
-	'foo/thisissuenumberistoolong#11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+	'#11111111111',
+	'foo/thisissuenumberistoolong#11111111111',
 
 	'foo_bar/bar',
 	'-foo/bar',
