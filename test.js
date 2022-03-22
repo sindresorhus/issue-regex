@@ -49,12 +49,8 @@ const nonMatches = [
 	// maxLength of 100. See issue #11.
 	'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
 
-	// A GitHub issue number shouldn't have an infinite number of digits. It's
-	// difficult to choose a cut-off point here because GitHub hasn't published
-	// any information on limits on the number of issues per repository. Here we
-	// choose a (completely arbitrary) limit of 10^100. This can probably be set
-	// much lower, but how much lower? The closer we get to a realistic number,
-	// the higher the likelihood of a false negative.
+	// A GitHub issue number shouldn't have an infinite number of digits. Limit to
+	// 10B issues (10^10-1).
 	'#11111111111',
 	'foo/thisissuenumberistoolong#11111111111',
 
