@@ -44,6 +44,12 @@ issueRegex().exec('Fixes avajs/ava#1023');
 
 Returns a `RegExp` for matching issue references.
 
+## Important
+
+If you run the regex against untrusted user input in a server context, you should [give it a timeout](https://github.com/sindresorhus/super-regex).
+
+**I do not consider ReDoS a valid vulnerability for this package.**
+
 ## Related
 
 - [linkify-issues](https://github.com/sindresorhus/linkify-issues) - Linkify GitHub issue references
