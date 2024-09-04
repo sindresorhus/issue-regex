@@ -62,22 +62,26 @@ const nonMatches = [
 	'foo/..',
 ];
 
-test('main', t => {
+test('baseline', t => {
 	t.deepEqual('Fixes #143 and avajs/ava#1023'.match(issueRegex()), [
 		'#143',
 		'avajs/ava#1023',
 	]);
+});
 
+test('should match', t => {
 	for (const x of matches) {
 		t.is((issueRegex().exec(`foo ${x} bar`) || [])[0], x);
 	}
+});
 
+test('should not match', t => {
 	for (const x of nonMatches) {
 		t.is(issueRegex().exec(`foo ${x} bar`), null);
 	}
 });
 
-test('main #2', t => {
+test('extract from string', t => {
 	// https://regex101.com/r/SQrOlx/12
 	const actual = `#123
 
@@ -93,6 +97,7 @@ test('main #2', t => {
 	- foo/-bar#123
 	- foo/-#123
 	- foo/.bar#123
+	- foo/bar.#123
 	- foo/...#123
 	- foo_bar/bar#123
 
@@ -100,14 +105,13 @@ test('main #2', t => {
 
 	- #0
 	- another/repo#0
-	- nonrepo#123
 	- user_repo#123
 	- #123hashtag
 	- foo/.#111
 	- foo/..#222
   - _foo/bar#123
 
-	#123`;
+	#999`;
 
 	const expected = [
 		'#123',
@@ -123,14 +127,15 @@ test('main #2', t => {
 		'foo/-bar#123',
 		'foo/-#123',
 		'foo/.bar#123',
+		'foo/bar.#123',
 		'foo/...#123',
-		'#123',
+		'#999',
 	];
 
 	t.deepEqual(actual.match(issueRegex()), expected);
 });
 
-test('capturing groups', t => {
+test('capturing groups: all', t => {
 	const match = issueRegex().exec('foo/bar#123');
 	t.is(match[1], 'foo');
 	t.is(match[2], 'bar');
@@ -138,5 +143,28 @@ test('capturing groups', t => {
 
 	t.is(match.groups.organization, 'foo');
 	t.is(match.groups.repository, 'bar');
+	t.is(match.groups.issueNumber, '123');
+});
+
+test('capturing groups: issue only', t => {
+	const match = issueRegex().exec('#123');
+	t.is(match[1], undefined);
+	t.is(match[2], undefined);
+	t.is(match[3], '123');
+
+	t.is(match.groups.organization, undefined);
+	t.is(match.groups.repository, undefined);
+	t.is(match.groups.issueNumber, '123');
+});
+
+// TODO: Tracked in https://github.com/sindresorhus/issue-regex/issues/17
+test.failing('capturing groups: no-repository', t => {
+	const match = issueRegex().exec('forkuser#123');
+	t.is(match[1], 'forkuser');
+	t.is(match[2], undefined);
+	t.is(match[3], '123');
+
+	t.is(match.groups.organization, 'forkuser');
+	t.is(match.groups.repository, undefined);
 	t.is(match.groups.issueNumber, '123');
 });
