@@ -105,6 +105,7 @@ test('extract from string', t => {
 
 	- #0
 	- another/repo#0
+ 	- nonrepo#123
 	- user_repo#123
 	- #123hashtag
 	- foo/.#111
