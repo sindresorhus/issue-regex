@@ -25,188 +25,187 @@ const matches = test.macro({
 });
 
 const noMatch = test.macro({
-  exec(t, input) {
-    const match = issueRegex().exec(`something ${input} something`);
-    t.falsy(match, `${input} should not match`);
+	exec(t, input) {
+		const match = issueRegex().exec(`something ${input} something`);
+		t.falsy(match, `${input} should not match`);
 
-    // Additional checks are not necessary since we expect no match
-  },
-  title(_, input) {
-    return `should not match ${input}`;
-  },
+		// Additional checks are not necessary since we expect no match
+	},
+	title(_, input) {
+		return `should not match ${input}`;
+	},
 });
-
 
 // Test cases for matching patterns
 test(
 	matches,
 	'#1',
-	{issueNumber: '1'}
+	{issueNumber: '1'},
 );
 test(
 	matches,
 	'#3223',
-	{issueNumber: '3223'}
+	{issueNumber: '3223'},
 );
 test(
 	matches,
 	'sindresorhus/dofle#33',
-	{organization: 'sindresorhus', repository: 'dofle', issueNumber: '33'}
+	{organization: 'sindresorhus', repository: 'dofle', issueNumber: '33'},
 );
 test(
 	matches,
 	'foo-bar/unicorn.rainbow#21',
-	{organization: 'foo-bar', repository: 'unicorn.rainbow', issueNumber: '21'}
+	{organization: 'foo-bar', repository: 'unicorn.rainbow', issueNumber: '21'},
 );
 test(
 	matches,
 	'foo/a#1',
-	{organization: 'foo', repository: 'a', issueNumber: '1'}
+	{organization: 'foo', repository: 'a', issueNumber: '1'},
 );
 test(
 	matches,
 	'a/foo#1',
-	{organization: 'a', repository: 'foo', issueNumber: '1'}
+	{organization: 'a', repository: 'foo', issueNumber: '1'},
 );
 test(
 	matches,
 	'thisorganisationnameislongbutokxxxxxxxx/foo#123',
-	{organization: 'thisorganisationnameislongbutokxxxxxxxx', repository: 'foo', issueNumber: '123'}
+	{organization: 'thisorganisationnameislongbutokxxxxxxxx', repository: 'foo', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/thisrepositorynameislongbutokxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123',
-	{organization: 'foo', repository: 'thisrepositorynameislongbutokxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', issueNumber: '123'}
+	{organization: 'foo', repository: 'thisrepositorynameislongbutokxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', issueNumber: '123'},
 );
 test(
 	matches,
 	'#1111111111',
-	{issueNumber: '1111111111'}
+	{issueNumber: '1111111111'},
 );
 test(
 	matches,
 	'foo/longbutokissuenumber#1111111111',
-	{organization: 'foo', repository: 'longbutokissuenumber', issueNumber: '1111111111'}
+	{organization: 'foo', repository: 'longbutokissuenumber', issueNumber: '1111111111'},
 );
 test(
 	matches,
 	'foo/-#123',
-	{organization: 'foo', repository: '-', issueNumber: '123'}
+	{organization: 'foo', repository: '-', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/-bar#123',
-	{organization: 'foo', repository: '-bar', issueNumber: '123'}
+	{organization: 'foo', repository: '-bar', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/bar-#123',
-	{organization: 'foo', repository: 'bar-', issueNumber: '123'}
+	{organization: 'foo', repository: 'bar-', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/foo-bar#123',
-	{organization: 'foo', repository: 'foo-bar', issueNumber: '123'}
+	{organization: 'foo', repository: 'foo-bar', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/.bar#123',
-	{organization: 'foo', repository: '.bar', issueNumber: '123'}
+	{organization: 'foo', repository: '.bar', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/..bar#123',
-	{organization: 'foo', repository: '..bar', issueNumber: '123'}
+	{organization: 'foo', repository: '..bar', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/...#123',
-	{organization: 'foo', repository: '...', issueNumber: '123'}
+	{organization: 'foo', repository: '...', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/_#123',
-	{organization: 'foo', repository: '_', issueNumber: '123'}
+	{organization: 'foo', repository: '_', issueNumber: '123'},
 );
 test(
 	matches,
 	'foo/0#123',
-	{organization: 'foo', repository: '0', issueNumber: '123'}
+	{organization: 'foo', repository: '0', issueNumber: '123'},
 );
 test(
 	matches,
 	'0/bar#123',
-	{organization: '0', repository: 'bar', issueNumber: '123'}
+	{organization: '0', repository: 'bar', issueNumber: '123'},
 );
 test(
 	matches,
 	'1/1#1',
-	{organization: '1', repository: '1', issueNumber: '1'}
+	{organization: '1', repository: '1', issueNumber: '1'},
 );
 test(
 	matches,
 	'Foo/Bar#1',
-	{organization: 'Foo', repository: 'Bar', issueNumber: '1'}
+	{organization: 'Foo', repository: 'Bar', issueNumber: '1'},
 );
 test(
 	matches,
 	'#123',
-	{issueNumber: '123'}
+	{issueNumber: '123'},
 );
 test(
 	matches,
 	'#666',
-	{issueNumber: '666'}
+	{issueNumber: '666'},
 );
 test(
 	matches,
 	'another/repo#123',
-	{organization: 'another', repository: 'repo', issueNumber: '123'}
+	{organization: 'another', repository: 'repo', issueNumber: '123'},
 );
 test(
 	matches,
 	'ano-ther.999/re_po#123',
-	{organization: '999', repository: 're_po', issueNumber: '123'}
+	{organization: '999', repository: 're_po', issueNumber: '123'},
 );
 test(
 	matches,
 	'(#123)',
-	{issueNumber: '123'}
+	{issueNumber: '123'},
 );
 test(
 	matches,
 	'[#123]',
-	{issueNumber: '123'}
+	{issueNumber: '123'},
 );
 test(
 	matches,
 	'<another/repo#123>',
-	{organization: 'another', repository: 'repo', issueNumber: '123'}
+	{organization: 'another', repository: 'repo', issueNumber: '123'},
 );
 test(
 	matches,
 	'this/is/ok/repo#444',
-	{organization: 'ok', repository: 'repo', issueNumber: '444'}
+	{organization: 'ok', repository: 'repo', issueNumber: '444'},
 );
 test(
 	matches,
 	'this/is.ok/repo#444',
-	{organization: 'ok', repository: 'repo', issueNumber: '444'}
+	{organization: 'ok', repository: 'repo', issueNumber: '444'},
 );
 test(
 	matches,
 	'-ok/repo#444',
-	{organization: 'ok', repository: 'repo', issueNumber: '444'}
+	{organization: 'ok', repository: 'repo', issueNumber: '444'},
 );
 test(
 	matches,
 	'foo/bar.#123',
-	{organization: 'foo', repository: 'bar.', issueNumber: '123'}
+	{organization: 'foo', repository: 'bar.', issueNumber: '123'},
 );
 test(
 	matches,
 	'#999',
-	{issueNumber: '999'}
+	{issueNumber: '999'},
 );
 
 test(noMatch, '#');
