@@ -2,22 +2,22 @@ import test from 'ava';
 import issueRegex from './index.js';
 
 const matches = test.macro({
-	exec(t, input, expected) {
+	exec(t, input, expected, description) {
 		const match = issueRegex().exec(`something ${input} something`);
-		t.truthy(match, `${input} should match`);
+		t.truthy(match, `should match but doesn't${description ? `: ${description}` : ''}`);
 
-		// Check if groups matches the expected value
 		t.deepEqual(match.groups, {
 			organization: undefined,
 			repository: undefined,
 			issueNumber: undefined,
 			...expected,
-		});
+		}, description);
 
-		// Additional checks for match groups
+		// Verify index-based matches
 		t.is(match[1], match.groups.organization);
 		t.is(match[2], match.groups.repository);
 		t.is(match[3], match.groups.issueNumber);
+		t.is(match.length, 4);
 	},
 	title(_, input) {
 		return `should match ${input}`;
@@ -25,15 +25,21 @@ const matches = test.macro({
 });
 
 const noMatch = test.macro({
-	exec(t, input) {
+	exec(t, input, description) {
 		const match = issueRegex().exec(`something ${input} something`);
-		t.falsy(match, `${input} should not match`);
-
-		// Additional checks are not necessary since we expect no match
+		t.falsy(match, description);
 	},
 	title(_, input) {
 		return `should not match ${input}`;
 	},
+});
+
+// Ensure that multiple patterns can be matched at once
+test('baseline', t => {
+	t.deepEqual('Fixes #143 and avajs/ava#1023'.match(issueRegex()), [
+		'#143',
+		'avajs/ava#1023',
+	]);
 });
 
 // Test cases for matching patterns
@@ -166,6 +172,7 @@ test(
 	matches,
 	'ano-ther.999/re_po#123',
 	{organization: '999', repository: 're_po', issueNumber: '123'},
+	'Organization names cannot contain dots',
 );
 test(
 	matches,
@@ -208,6 +215,7 @@ test(
 	{issueNumber: '999'},
 );
 
+// Test cases for invalid patterns
 test(noMatch, '#');
 test(noMatch, '#0');
 test(noMatch, '#x');
@@ -218,16 +226,13 @@ test(noMatch, 'sindresorhus/dofle#0');
 test(noMatch, 'dofle#33');
 test(noMatch, '#123hashtag');
 
-// GitHub organization names can't be longer than 39 characters as of March 2022.
-// Source: GitHub shows an error message when trying to create an organization with a longer name. See issue #11.
-test(noMatch, 'thisorganisationnameistoolongxxxxxxxxxxx/foo#123');
+// Source: As of March 2022 GitHub shows an error message when trying to create an organization with a longer name. See issue #11.
+test(noMatch, 'thisorganisationnameistoolongxxxxxxxxxxx/foo#123', 'GitHub organization names can\'t be longer than 39 characters');
 
-// GitHub repository names can't be longer than 100 characters as of March 2022.
-// Source: The text box on the repository creation page has a maxLength of 100. See issue #11.
-test(noMatch, 'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123');
+// Source: As of March 2022 the text box on the repository creation page has a maxLength of 100. See issue #11.
+test(noMatch, 'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123', 'GitHub repository names can\'t be longer than 100 characters');
 
-// A GitHub issue number shouldn't have an infinite number of digits. Limit to 10B issues (10^10-1).
-test(noMatch, '#11111111111');
+test(noMatch, '#11111111111', 'A GitHub issue number shouldn\'t have an infinite number of digits. Limit to 10B issues (10^10-1).');
 test(noMatch, 'foo/thisissuenumberistoolong#11111111111');
 
 test(noMatch, 'foo_bar/bar');
