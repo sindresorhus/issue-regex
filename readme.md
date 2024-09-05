@@ -38,6 +38,20 @@ issueRegex().exec('Fixes avajs/ava#1023');
 */
 ```
 
+### prefix
+
+Support for references like `GH-123` can be added manually. Adding a prefix will still match the #-based references:
+
+```js
+import issueRegex from 'issue-regex';
+
+issueRegex('GH-').exec('GH-123');
+//=> ['GH-123', 'GH-', '123']
+
+'Fixes GH-143 and avajs/ava#1023'.match(issueRegex('GH-'));
+//=> ['GH-143', 'avajs/ava#1023']
+```
+
 ## API
 
 ### issueRegex()

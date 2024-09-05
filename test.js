@@ -4,25 +4,34 @@ import test from 'ava';
 import issueRegex from './index.js';
 
 const matches = test.macro({
-	exec(t, input, expectedArray, description) {
+	exec(t, input, expectedArray, {message, prefix} = {}) {
 		// Verify test input
 		t.true(Array.isArray(expectedArray), 'Expected array, got', typeof expectedArray);
 		t.is(expectedArray.length, 3, 'Expected array length 3, got', expectedArray.length);
 
 		// Baseline match
-		const match = issueRegex().exec(input);
-		t.truthy(match, `should match but doesn't${description ? `: ${description}` : ''}`);
+		const match = issueRegex(prefix).exec(input);
+		t.truthy(match, `should match but doesn't${message ? `: ${message}` : ''}`);
 
 		// Ensure that both the named capture groups and the index-based matches are correct
-		t.deepEqual(match.slice(1), expectedArray, description);
+		t.deepEqual(match.slice(1), expectedArray, message);
 		t.deepEqual(match.groups, {
 			organization: expectedArray[0],
 			repository: expectedArray[1],
 			issueNumber: expectedArray[2],
-		}, description);
+		}, message);
 
 		// Verify the match is unchanged when the reference appears in the middle of a string
-		t.deepEqual(issueRegex().exec(`Very #middle ${input} much/tricky#`).groups, match.groups, description);
+		t.deepEqual(issueRegex(prefix).exec(`Very #middle ${input} much/tricky#`).groups, match.groups, message);
+
+		// Verify the match is unchanged when a prefix is specified
+		if (!prefix) {
+			t.deepEqual(
+				issueRegex('UNICORN-').exec(input).groups,
+				match.groups,
+				'Specifying a prefix should not change the behavior for this reference, but it did',
+			);
+		}
 	},
 	title(_, input) {
 		return `should match ${input}`;
@@ -30,9 +39,9 @@ const matches = test.macro({
 });
 
 const noMatch = test.macro({
-	exec(t, input, description) {
-		t.falsy(issueRegex().exec(input), description);
-		t.falsy(issueRegex().exec(`Very #middle ${input} much/tricky#`), description);
+	exec(t, input, {message, prefix} = {}) {
+		t.falsy(issueRegex(prefix).exec(input), message);
+		t.falsy(issueRegex(prefix).exec(`Very #middle ${input} much/tricky#`), message);
 	},
 	title(_, input) {
 		return `should not match ${input}`;
@@ -41,9 +50,10 @@ const noMatch = test.macro({
 
 // Ensure that multiple patterns can be matched at once
 test('baseline', t => {
-	t.deepEqual('Fixes #143 and avajs/ava#1023'.match(issueRegex()), [
+	t.deepEqual('Fixes #143, closes avajs/ava#1023 and unblocks GH-1'.match(issueRegex('GH-')), [
 		'#143',
 		'avajs/ava#1023',
+		'GH-1',
 	]);
 });
 
@@ -177,7 +187,7 @@ test(
 	matches,
 	'ano-ther.999/re_po#123',
 	['999', 're_po', '123'],
-	'Organization names cannot contain dots',
+	{message: 'Organization names cannot contain dots'},
 );
 test(
 	matches,
@@ -198,25 +208,25 @@ test(
 	matches,
 	'this/is/ok/repo#444',
 	['ok', 'repo', '444'],
-	'GitHub repository names can\'t contain a slash',
+	{message: 'GitHub repository names can\'t contain a slash'},
 );
 test(
 	matches,
 	'this/is.ok/repo#444',
 	['ok', 'repo', '444'],
-	'GitHub repository names can\'t contain a dot',
+	{message: 'GitHub repository names can\'t contain a dot'},
 );
 test(
 	matches,
 	'-ok/repo#444',
 	['ok', 'repo', '444'],
-	'GitHub repository names can\'t start with a dash',
+	{message: 'GitHub repository names can\'t start with a dash'},
 );
 test(
 	matches,
 	'foo/bar.#123',
 	['foo', 'bar.', '123'],
-	'GitHub repository names can end with a dot',
+	{message: 'GitHub repository names can end with a dot'},
 );
 test(
 	matches,
@@ -234,7 +244,7 @@ test(
 	matches,
 	'thisorganisationnameistoolongxxxxxxxxxxx/foo#7888',
 	['foo',, '7888'],
-	'GitHub organization names can\'t be longer than 39 characters, so reference should be parsed as forkuser#number',
+	{message: 'GitHub organization names can\'t be longer than 39 characters, so reference should be parsed as forkuser#number'},
 );
 
 // Test cases for invalid patterns
@@ -248,9 +258,13 @@ test(noMatch, 'sindresorhus/dofle#0');
 test(noMatch, '#123hashtag');
 
 // Source: As of March 2022 the text box on the repository creation page has a maxLength of 100. See issue #11.
-test(noMatch, 'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123', 'GitHub repository names can\'t be longer than 100 characters');
+test(noMatch, 'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123', {
+	message: 'GitHub repository names can\'t be longer than 100 characters',
+});
 
-test(noMatch, '#11111111111', 'A GitHub issue number shouldn\'t have an infinite number of digits. Limit to 10B issues (10^10-1).');
+test(noMatch, '#11111111111', {
+	message: 'A GitHub issue number shouldn\'t have an infinite number of digits. Limit to 10B issues (10^10-1).',
+});
 test(noMatch, 'foo/thisissuenumberistoolong#11111111111');
 
 test(noMatch, 'foo_bar/bar');
@@ -261,3 +275,17 @@ test(noMatch, 'foo.bar/bar');
 // Reserved names
 test(noMatch, 'foo/.');
 test(noMatch, 'foo/..');
+
+// Custom prefix tests. The main tests already verify that prefixes don't break simple references.
+test(
+	matches,
+	'GH-1111111111',
+	[,, '1111111111'],
+	{prefix: 'GH-'},
+);
+test(
+	matches,
+	'JIR:1111111111',
+	[,, '1111111111'],
+	{prefix: 'JIR:'},
+);

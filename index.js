@@ -5,8 +5,12 @@ const {source: repository} = /(?<repository>[\w.-]{1,100})/;
 const {source: reservedRepository} = /(?<!\/\.{1,2})/;
 const {source: issueNumber} = /(?<issueNumber>[1-9]\d{0,9})/;
 const {source: initialDelimiter} = /(?<!\w)/;
-const fullRegex = `${initialDelimiter}(?:${organization}(?:\\/${repository})?)?${reservedRepository}#${issueNumber}\\b`;
+const fullRegex = `${initialDelimiter}(?:(?:${organization}(?:\\/${repository})?)?${reservedRepository}#)${issueNumber}\\b`;
 
-export default function issueRegex() {
+export default function issueRegex(prefix) {
+	if (prefix) {
+		return new RegExp(fullRegex.replace('#', '#|' + prefix), 'gi');
+	}
+
 	return new RegExp(fullRegex, 'gi');
 }
