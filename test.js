@@ -10,7 +10,7 @@ const matches = test.macro({
 		t.is(expectedArray.length, 3, 'Expected array length 3, got', expectedArray.length);
 
 		// Baseline match
-		const match = issueRegex().exec(`something ${input} something`);
+		const match = issueRegex().exec(input);
 		t.truthy(match, `should match but doesn't${description ? `: ${description}` : ''}`);
 
 		// Ensure that both the named capture groups and the index-based matches are correct
@@ -20,6 +20,9 @@ const matches = test.macro({
 			repository: expectedArray[1],
 			issueNumber: expectedArray[2],
 		}, description);
+
+		// Verify the match is unchanged when the reference appears in the middle of a string
+		t.deepEqual(issueRegex().exec(`Very #middle ${input} much/tricky#`).groups, match.groups, description);
 	},
 	title(_, input) {
 		return `should match ${input}`;
@@ -28,8 +31,8 @@ const matches = test.macro({
 
 const noMatch = test.macro({
 	exec(t, input, description) {
-		const match = issueRegex().exec(`something ${input} something`);
-		t.falsy(match, description);
+		t.falsy(issueRegex().exec(input), description);
+		t.falsy(issueRegex().exec(`Very #middle ${input} much/tricky#`), description);
 	},
 	title(_, input) {
 		return `should not match ${input}`;
