@@ -198,21 +198,25 @@ test(
 	matches,
 	'this/is/ok/repo#444',
 	['ok', 'repo', '444'],
+	'GitHub repository names can\'t contain a slash',
 );
 test(
 	matches,
 	'this/is.ok/repo#444',
 	['ok', 'repo', '444'],
+	'GitHub repository names can\'t contain a dot',
 );
 test(
 	matches,
 	'-ok/repo#444',
 	['ok', 'repo', '444'],
+	'GitHub repository names can\'t start with a dash',
 );
 test(
 	matches,
 	'foo/bar.#123',
 	['foo', 'bar.', '123'],
+	'GitHub repository names can end with a dot',
 );
 test(
 	matches,
