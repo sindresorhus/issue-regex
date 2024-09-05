@@ -18,12 +18,6 @@
 	"scripts": {
 		"test": "xo && ava && tsd"
 	},
-	"xo": {
-		"rules": {
-			"// Due to https://github.com/avajs/eslint-plugin-ava/issues/344": "off",
-			"ava/assertion-arguments": "off"
-		}
-	},
 	"files": [
 		"index.js",
 		"index.d.ts"
@@ -48,5 +42,11 @@
 		"ava": "^6.1.3",
 		"tsd": "^0.31.2",
 		"xo": "^0.56.0"
+	},
+	"xo": {
+		"rules": {
+			"// Due to https://github.com/avajs/eslint-plugin-ava/issues/344": "off",
+			"ava/assertion-arguments": "off"
+		}
 	}
 }
