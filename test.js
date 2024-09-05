@@ -31,6 +31,11 @@ const matches = test.macro({
 				match.groups,
 				'Specifying a prefix should not change the behavior for this reference, but it did',
 			);
+			t.deepEqual(
+				issueRegex('').exec(input).groups,
+				match.groups,
+				'Specifying an empty prefix should not change the behavior for this reference, but it did',
+			);
 		}
 	},
 	title(_, input) {
