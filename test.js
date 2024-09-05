@@ -223,10 +223,18 @@ test(
 	'#999',
 	[,, '999'],
 );
-test.failing(
+test(
 	matches,
 	'forkuser#123',
 	['forkuser',, '123'],
+);
+
+// Source: As of March 2022 GitHub shows an error message when trying to create an organization with a longer name. See issue #11.
+test(
+	matches,
+	'thisorganisationnameistoolongxxxxxxxxxxx/foo#7888',
+	['foo',, '7888'],
+	'GitHub organization names can\'t be longer than 39 characters, so reference should be parsed as forkuser#number',
 );
 
 // Test cases for invalid patterns
@@ -237,11 +245,7 @@ test(noMatch, '123');
 test(noMatch, 'sindresorhus/dofle');
 test(noMatch, 'sindresorhus/dofle#');
 test(noMatch, 'sindresorhus/dofle#0');
-test(noMatch, 'dofle#33');
 test(noMatch, '#123hashtag');
-
-// Source: As of March 2022 GitHub shows an error message when trying to create an organization with a longer name. See issue #11.
-test(noMatch, 'thisorganisationnameistoolongxxxxxxxxxxx/foo#123', 'GitHub organization names can\'t be longer than 39 characters');
 
 // Source: As of March 2022 the text box on the repository creation page has a maxLength of 100. See issue #11.
 test(noMatch, 'foo/thisrepositorynameistoolongxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#123', 'GitHub repository names can\'t be longer than 100 characters');
