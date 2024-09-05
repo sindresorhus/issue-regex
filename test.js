@@ -219,6 +219,11 @@ test(
 	'#999',
 	[,, '999'],
 );
+test.failing(
+	matches,
+	'forkuser#123',
+	['forkuser',, '123'],
+);
 
 // Test cases for invalid patterns
 test(noMatch, '#');
@@ -245,6 +250,6 @@ test(noMatch, '-foo/bar');
 test(noMatch, 'foo-/bar');
 test(noMatch, 'foo.bar/bar');
 
-// Reserves names
+// Reserved names
 test(noMatch, 'foo/.');
 test(noMatch, 'foo/..');
