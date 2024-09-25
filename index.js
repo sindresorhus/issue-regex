@@ -7,9 +7,9 @@ const {source: issueNumber} = /(?<issueNumber>[1-9]\d{0,9})/;
 const {source: initialDelimiter} = /(?<!\w)/;
 const fullRegex = `${initialDelimiter}(?:(?:${organization}(?:\\/${repository})?)?${reservedRepository}#)${issueNumber}\\b`;
 
-export default function issueRegex(prefix) {
-	if (prefix) {
-		return new RegExp(fullRegex.replace('#', '#|' + prefix), 'gi');
+export default function issueRegex({additionalPrefix} = {}) {
+	if (additionalPrefix) {
+		return new RegExp(fullRegex.replace('#', '#|' + additionalPrefix), 'gi');
 	}
 
 	return new RegExp(fullRegex, 'gi');

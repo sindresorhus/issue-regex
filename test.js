@@ -4,13 +4,13 @@ import test from 'ava';
 import issueRegex from './index.js';
 
 const matches = test.macro({
-	exec(t, input, expectedArray, {message, prefix} = {}) {
+	exec(t, input, expectedArray, {message, additionalPrefix} = {}) {
 		// Verify test input
 		t.true(Array.isArray(expectedArray), 'Expected array, got', typeof expectedArray);
 		t.is(expectedArray.length, 3, 'Expected array length 3, got', expectedArray.length);
 
 		// Baseline match
-		const match = issueRegex(prefix).exec(input);
+		const match = issueRegex({additionalPrefix}).exec(input);
 		t.truthy(match, `should match but doesn't${message ? `: ${message}` : ''}`);
 
 		// Ensure that both the named capture groups and the index-based matches are correct
@@ -22,10 +22,10 @@ const matches = test.macro({
 		}, message);
 
 		// Verify the match is unchanged when the reference appears in the middle of a string
-		t.deepEqual(issueRegex(prefix).exec(`Very #middle ${input} much/tricky#`).groups, match.groups, message);
+		t.deepEqual(issueRegex({additionalPrefix}).exec(`Very #middle ${input} much/tricky#`).groups, match.groups, message);
 
 		// Verify the match is unchanged when a prefix is specified
-		if (!prefix) {
+		if (!additionalPrefix) {
 			t.deepEqual(
 				issueRegex('UNICORN-').exec(input).groups,
 				match.groups,
@@ -44,9 +44,9 @@ const matches = test.macro({
 });
 
 const noMatch = test.macro({
-	exec(t, input, {message, prefix} = {}) {
-		t.falsy(issueRegex(prefix).exec(input), message);
-		t.falsy(issueRegex(prefix).exec(`Very #middle ${input} much/tricky#`), message);
+	exec(t, input, {message, additionalPrefix} = {}) {
+		t.falsy(issueRegex({additionalPrefix}).exec(input), message);
+		t.falsy(issueRegex({additionalPrefix}).exec(`Very #middle ${input} much/tricky#`), message);
 	},
 	title(_, input) {
 		return `should not match ${input}`;
@@ -55,7 +55,7 @@ const noMatch = test.macro({
 
 // Ensure that multiple patterns can be matched at once
 test('baseline', t => {
-	t.deepEqual('Fixes #143, closes avajs/ava#1023 and unblocks GH-1'.match(issueRegex('GH-')), [
+	t.deepEqual('Fixes #143, closes avajs/ava#1023 and unblocks GH-1'.match(issueRegex({additionalPrefix: 'GH-'})), [
 		'#143',
 		'avajs/ava#1023',
 		'GH-1',
@@ -286,11 +286,11 @@ test(
 	matches,
 	'GH-1111111111',
 	[,, '1111111111'],
-	{prefix: 'GH-'},
+	{additionalPrefix: 'GH-'},
 );
 test(
 	matches,
 	'JIR:1111111111',
 	[,, '1111111111'],
-	{prefix: 'JIR:'},
+	{additionalPrefix: 'JIR:'},
 );
