@@ -1,7 +1,7 @@
 /**
 Regular expression for matching issue references.
 
-@param prefix - Additional prefix for references like `GH-123`. Adding a prefix will still match the #-based references.
+@param prefix - Additional prefix for references like `GH-123`. Adding a prefix will still match the #-based references. `prefix` is added unescaped to the regex, keep it simple.
 
 @example
 ```

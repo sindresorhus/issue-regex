@@ -52,6 +52,9 @@ issueRegex('GH-').exec('GH-123');
 //=> ['GH-143', 'avajs/ava#1023']
 ```
 
+> [!NOTE]
+> `prefix` is added unescaped to the regex, keep it simple.
+
 ## API
 
 ### issueRegex()
